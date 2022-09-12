@@ -42,6 +42,7 @@ public class UserController {
   @Parameters({
       @Parameter(name = "email", description = "자신의 email", example = "passinger@mate.com"),
       @Parameter(name = "userName", description = "자신의 닉네임", example = "메이트"),
+      @Parameter(name = "password", description = "비밀번호", example = "password123@"),
   })
   @PostMapping("/signup")
   public ResponseEntity<?> registerUser(@RequestBody UserDTO userDTO) {
