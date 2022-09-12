@@ -24,7 +24,8 @@ public class WebSecurityConfig {
         .httpBasic().disable()
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
-        .authorizeRequests().antMatchers("/", "/swagger-ui/**", "/v3/**", "/api/auth/**", "/error").permitAll()
+        .authorizeRequests().antMatchers("/", "/swagger-ui/**", "/v3/**", "/api/auth/**", "/api/oauth/**", "/error")
+        .permitAll()
         .anyRequest().authenticated();
 
     http.addFilterAfter(
