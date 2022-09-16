@@ -17,6 +17,10 @@ import com.mate.carpool.security.TokenProvider;
 import com.mate.carpool.service.OAuthService;
 import com.mate.carpool.service.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "oauth", description = "소셜 로그인 API")
 @RestController
 @RequestMapping("/api/oauth")
 public class OAuthController {
@@ -32,6 +36,7 @@ public class OAuthController {
 
   private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
+  @Operation(summary = "카카오 로그인", description = "카카오 로그인 주소 : kauth.kakao.com/oauth/authorize?client_id=8763097c83420044eeea901b962072ab&redirect_uri=http://localhost:8080/api/oauth/kakao&response_type=code")
   @ResponseBody
   @GetMapping("kakao")
   public ResponseEntity<?> kakaoCallback(@RequestParam String code) {
@@ -39,23 +44,29 @@ public class OAuthController {
       String accessToken = oAuthService.getKakaoAccessToken(code);
       UserDTO userDTO = oAuthService.getKakaoUserInfo(accessToken);
 
-      UserEntity user = UserEntity.builder()
+      UserEntity kakaoUser = UserEntity.builder()
           .email(userDTO.getEmail())
           .userName(userDTO.getUserName())
           .password(passwordEncoder.encode(userDTO.getPassword())).build();
 
-      UserEntity registeredUser = userService.create(user);
+      UserEntity registeredUser = userService.create(kakaoUser);
 
-      UserDTO responseUserDTO = UserDTO.builder()
-          .email(registeredUser.getEmail())
-          .id(registeredUser.getId())
-          .userName(registeredUser.getUserName()).build();
+      if (null != registeredUser) {
+        final String token = tokenProvider.create(registeredUser);
+        final UserDTO responseUserDTO = UserDTO.builder()
+            .email(registeredUser.getEmail())
+            .id(registeredUser.getId())
+            .token(token).build();
 
-      return ResponseEntity.ok().body(responseUserDTO);
+        return ResponseEntity.ok().body(responseUserDTO);
+      } else {
+        ResponseDTO<UserDTO> responseDTO = ResponseDTO.<UserDTO>builder().error("Login failed.").build();
+        return ResponseEntity.badRequest().body(responseDTO);
+      }
     } catch (Exception e) {
       String error = e.getMessage();
-      ResponseDTO<UserDTO> response = ResponseDTO.<UserDTO>builder().error(error).build();
-      return ResponseEntity.badRequest().body(response);
+      ResponseDTO<UserDTO> responseDTO = ResponseDTO.<UserDTO>builder().error(error).build();
+      return ResponseEntity.badRequest().body(responseDTO);
     }
 
   }

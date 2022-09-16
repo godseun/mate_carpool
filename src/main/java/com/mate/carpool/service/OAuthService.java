@@ -21,17 +21,54 @@ public class OAuthService {
   public UserDTO getKakaoUserInfo(String accessToken) {
 
     UserDTO userDTO = new UserDTO();
-    userDTO.setToken(accessToken);
-    userDTO.setEmail("sime00@naver.com");
-    userDTO.setUserName("godseun");
-    userDTO.setPassword("godseun!@#");
+
+    long kakaoId = 0;
+    String kakaoNickName = "";
+    String kakaoEmail = "";
+
+    String reqURL = "https://kapi.kakao.com/v2/user/me";
+    try {
+      // 헤더 설정
+      HttpHeaders headers = new HttpHeaders();
+      headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+      headers.setBearerAuth(accessToken);
+
+      // 파라미터 세팅
+      MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+
+      HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map,
+          headers);
+
+      ResponseEntity<String> res = new RestTemplate().postForEntity(reqURL, request,
+          String.class);
+
+      // Gson 라이브러리에 포함된 클래스로 JSON파싱 객체 생성
+      if (res.getStatusCodeValue() != 200) {
+        JsonElement element = JsonParser.parseString(res.getBody());
+        throw new RuntimeException("Kakao get account Fail. " + element.getAsJsonObject().get("error").getAsString());
+      }
+      JsonElement element = JsonParser.parseString(res.getBody());
+
+      kakaoId = element.getAsJsonObject().get("id").getAsLong();
+      kakaoNickName = element.getAsJsonObject().get("properties").getAsJsonObject().get("nickname").getAsString();
+      if (!element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_email").getAsBoolean()) {
+        throw new RuntimeException("Kakao get email Fail.");
+      }
+      kakaoEmail = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
+
+      userDTO.setEmail(kakaoEmail);
+      userDTO.setUserName(kakaoNickName);
+      userDTO.setPassword(Long.toString(kakaoId));
+    } catch (Exception e) {
+      log.warn("Kakao get account Fail. {}", e.getMessage());
+      throw new RuntimeException("Kakao get account Fail.");
+    }
 
     return userDTO;
   }
 
   public String getKakaoAccessToken(String code) {
     String access_Token = "";
-    String refresh_Token = "";
     String reqURL = "https://kauth.kakao.com/oauth/token";
 
     try {
@@ -60,10 +97,6 @@ public class OAuthService {
       JsonElement element = JsonParser.parseString(res.getBody());
 
       access_Token = element.getAsJsonObject().get("access_token").getAsString();
-      refresh_Token = element.getAsJsonObject().get("refresh_token").getAsString();
-
-      System.out.println("access_token : " + access_Token);
-      System.out.println("refresh_token : " + refresh_Token);
 
     } catch (Exception e) {
       log.warn("Kakao login Fail. {}", e.getMessage());
