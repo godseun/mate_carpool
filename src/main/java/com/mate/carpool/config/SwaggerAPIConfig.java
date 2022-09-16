@@ -21,7 +21,7 @@ public class SwaggerAPIConfig {
   @Bean
   public OpenAPI springShopOpenAPI() {
     return new OpenAPI()
-        .info(new Info().title("Mate 6.0 Car Pool API")
+        .info(new Info().title("Mate 6.1 Car Pool API")
             .description("Spring server application")
             .version("v0.0.1"));
   }
