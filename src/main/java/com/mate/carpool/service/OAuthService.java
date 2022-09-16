@@ -1,63 +1,63 @@
 package com.mate.carpool.service;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.mate.carpool.dto.UserDTO;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class OAuthService {
+  public UserDTO getKakaoUserInfo(String accessToken) {
+
+    UserDTO userDTO = new UserDTO();
+    userDTO.setToken(accessToken);
+    userDTO.setEmail("sime00@naver.com");
+    userDTO.setUserName("godseun");
+    userDTO.setPassword("godseun!@#");
+
+    return userDTO;
+  }
+
   public String getKakaoAccessToken(String code) {
     String access_Token = "";
     String refresh_Token = "";
     String reqURL = "https://kauth.kakao.com/oauth/token";
 
     try {
-      URL url = new URL(reqURL);
-      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+      // 헤더 설정
+      HttpHeaders headers = new HttpHeaders();
+      headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-      // POST 요청을 위해 기본값이 false인 setDoOutput을 true로
-      conn.setRequestMethod("POST");
-      conn.setDoOutput(true);
+      // 파라미터 세팅
+      MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+      map.add("grant_type", "authorization_code");
+      map.add("client_id", "8763097c83420044eeea901b962072ab");
+      map.add("client_secret", "QQP9e4kuegEA1ZQLUSDFINBknLcDoL8R");
+      map.add("code", code);
 
-      String redirectUri = URLEncoder.encode("redirect_uri=http://localhost:8080/api/oauth/kakao_login", "UTF-8");
+      HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map,
+          headers);
 
-      // POST 요청에 필요로 요구하는 파라미터 스트림을 통해 전송
-      BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
-      StringBuilder sb = new StringBuilder();
-      sb.append("grant_type=authorization_code");
-      sb.append("&client_id=8763097c83420044eeea901b962072ab");
-      sb.append("&client_secret=QQP9e4kuegEA1ZQLUSDFINBknLcDoL8R");
-      sb.append("&" + redirectUri);
-      sb.append("&code=" + code);
-      bw.write(sb.toString());
-      bw.flush();
-
-      // 결과 코드가 200이라면 성공
-      int responseCode = conn.getResponseCode();
-      System.out.println("responseCode : " + responseCode);
-
-      // 요청을 통해 얻은 JSON타입의 Response 메세지 읽어오기
-      BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-      String line = "";
-      String result = "";
-
-      while ((line = br.readLine()) != null) {
-        result += line;
-      }
-      System.out.println("response body : " + result);
+      ResponseEntity<String> res = new RestTemplate().postForEntity(reqURL, request,
+          String.class);
 
       // Gson 라이브러리에 포함된 클래스로 JSON파싱 객체 생성
-      JsonElement element = JsonParser.parseString(result);
+      if (res.getStatusCodeValue() != 200) {
+        JsonElement element = JsonParser.parseString(res.getBody());
+        throw new RuntimeException("Kakao login Fail. " + element.getAsJsonObject().get("error").getAsString());
+      }
+      JsonElement element = JsonParser.parseString(res.getBody());
 
       access_Token = element.getAsJsonObject().get("access_token").getAsString();
       refresh_Token = element.getAsJsonObject().get("refresh_token").getAsString();
@@ -65,10 +65,9 @@ public class OAuthService {
       System.out.println("access_token : " + access_Token);
       System.out.println("refresh_token : " + refresh_Token);
 
-      br.close();
-      bw.close();
-    } catch (IOException e) {
-      e.printStackTrace();
+    } catch (Exception e) {
+      log.warn("Kakao login Fail. {}", e.getMessage());
+      throw new RuntimeException("Kakao login Fail.");
     }
 
     return access_Token;
