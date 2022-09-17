@@ -31,10 +31,10 @@ public class UserController {
   @Operation(summary = "자신의 정보 가져오기")
   @ResponseBody
   @GetMapping
-  public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal String userId) {
+  public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal String userSeq) {
     // TODO: 사용자 정보가져오기 / 에러핸들링 필요
     try {
-      final Optional<UserEntity> userEntity = userService.getMyInfo(userId);
+      final Optional<UserEntity> userEntity = userService.getMyInfo(userSeq);
       final UserDTO responseUserDTO = UserDTO.builder()
           .email(userEntity.get().getEmail())
           .userName(userEntity.get().getUserName())
@@ -53,10 +53,10 @@ public class UserController {
   @Operation(summary = "드라이버 or 패신저 최초 등록", description = "")
   @ResponseBody
   @PatchMapping
-  public ResponseEntity<?> userTypeCreate(@AuthenticationPrincipal String userId, @RequestBody UserDTO userDTO) {
+  public ResponseEntity<?> userTypeCreate(@AuthenticationPrincipal String userSeq, @RequestBody UserDTO userDTO) {
 
     UserEntity userEntity = UserEntity.builder()
-        .id(userId)
+        .seq(userSeq)
         .studentNo(userDTO.getStudentNo())
         .deptNo(userDTO.getDeptNo())
         .userType(userDTO.getUserType())
@@ -64,7 +64,7 @@ public class UserController {
 
     // TODO: 사용자 정보가져오기 / 에러핸들링 필요
     try {
-      final Optional<UserEntity> responseEntity = userService.update(userId, userEntity);
+      final Optional<UserEntity> responseEntity = userService.update(userSeq, userEntity);
       final UserDTO responseUserDTO = UserDTO.builder()
           .email(responseEntity.get().getEmail())
           .userName(responseEntity.get().getUserName())

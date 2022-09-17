@@ -24,7 +24,7 @@ public class UserDTO {
   private String profileImg;
 
   @JsonIgnore
-  private String id;
+  private String seq;
   @JsonIgnore
   private int isRemoved;
   @JsonIgnore

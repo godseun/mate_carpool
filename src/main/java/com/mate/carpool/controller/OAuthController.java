@@ -55,7 +55,7 @@ public class OAuthController {
         final String token = tokenProvider.create(registeredUser);
         final UserDTO responseUserDTO = UserDTO.builder()
             .email(registeredUser.getEmail())
-            .id(registeredUser.getId())
+            .seq(registeredUser.getSeq())
             .token(token)
             .build();
 
