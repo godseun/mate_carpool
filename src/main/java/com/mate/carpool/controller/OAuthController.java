@@ -56,7 +56,8 @@ public class OAuthController {
         final UserDTO responseUserDTO = UserDTO.builder()
             .email(registeredUser.getEmail())
             .id(registeredUser.getId())
-            .token(token).build();
+            .token(token)
+            .build();
 
         return ResponseEntity.ok().body(responseUserDTO);
       } else {
@@ -68,7 +69,5 @@ public class OAuthController {
       ResponseDTO<UserDTO> responseDTO = ResponseDTO.<UserDTO>builder().error(error).build();
       return ResponseEntity.badRequest().body(responseDTO);
     }
-
   }
-
 }
