@@ -1,6 +1,7 @@
 package com.mate.carpool.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -23,8 +24,10 @@ public class UserDTO {
   private String deptNo;
   private String profileImg;
 
+  private List<UserTimetableDTO> timeTables;
+
   @JsonIgnore
-  private String seq;
+  private String userSeq;
   @JsonIgnore
   private int isRemoved;
   @JsonIgnore
