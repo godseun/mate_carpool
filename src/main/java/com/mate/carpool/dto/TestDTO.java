@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class TestDTO {
-  private String userType;
+  private String memberType;
   private String studentNo;
   private String deptNo;
 }

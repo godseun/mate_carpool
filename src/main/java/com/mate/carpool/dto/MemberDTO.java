@@ -14,20 +14,20 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class UserDTO {
+public class MemberDTO {
 
   private String token;
   private String email;
-  private String userName;
-  private String userType;
+  private String memberName;
+  private String memberType;
   private String studentNo;
   private String deptNo;
   private String profileImg;
 
-  private List<UserTimetableDTO> timeTables;
+  private List<MemberTimetableDTO> timeTables;
 
   @JsonIgnore
-  private String userSeq;
+  private String memberId;
   @JsonIgnore
   private int isRemoved;
   @JsonIgnore
@@ -37,8 +37,8 @@ public class UserDTO {
   @JsonIgnore
   private LocalDateTime updatedAt;
 
-  public boolean isUserTypeValid() {
-    if (this.userType == null || !this.userType.equals("D") && !this.userType.equals("P")) {
+  public boolean isMemberTypeValid() {
+    if (this.memberType == null || !this.memberType.equals("D") && !this.memberType.equals("P")) {
       return false;
     }
     return true;

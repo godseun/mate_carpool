@@ -11,13 +11,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class UserTimetableDTO {
+public class MemberTimetableDTO {
 
   @JsonIgnore
-  private String userSeq;
+  private String memberId;
 
   private int dayCode;
 
   @JsonIgnore
-  private String seq;
+  private String memberTimetableId;
 }

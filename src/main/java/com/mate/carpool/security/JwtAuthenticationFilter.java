@@ -35,11 +35,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       log.info("Filter is running...");
 
       if (null != token && !token.equalsIgnoreCase("null")) {
-        String userSeq = tokenProvider.validateAndGetUserId(token);
-        log.info("Authenticated user ID : " + userSeq);
+        String memberId = tokenProvider.validateAndGetMemberId(token);
+        log.info("Authenticated member ID : " + memberId);
 
         AbstractAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-            userSeq,
+            memberId,
             null,
             AuthorityUtils.NO_AUTHORITIES);
 
@@ -49,7 +49,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         SecurityContextHolder.setContext(securityContext);
       }
     } catch (Exception e) {
-      logger.error("Could not set user authentication in security context", e);
+      logger.error("Could not set member authentication in security context", e);
     }
 
     filterChain.doFilter(request, response);

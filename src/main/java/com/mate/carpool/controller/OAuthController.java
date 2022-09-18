@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mate.carpool.dto.ResponseDTO;
-import com.mate.carpool.dto.UserDTO;
-import com.mate.carpool.model.UserEntity;
+import com.mate.carpool.dto.MemberDTO;
+import com.mate.carpool.model.MemberEntity;
 import com.mate.carpool.security.TokenProvider;
 import com.mate.carpool.service.OAuthService;
-import com.mate.carpool.service.UserService;
+import com.mate.carpool.service.MemberService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -29,7 +29,7 @@ public class OAuthController {
   private OAuthService oAuthService;
 
   @Autowired
-  private UserService userService;
+  private MemberService memberService;
 
   @Autowired
   private TokenProvider tokenProvider;
@@ -42,31 +42,31 @@ public class OAuthController {
   public ResponseEntity<?> kakaoCallback(@RequestParam String code) {
     try {
       String accessToken = oAuthService.getKakaoAccessToken(code);
-      UserDTO userDTO = oAuthService.getKakaoUserInfo(accessToken);
+      MemberDTO memberDTO = oAuthService.getKakaoUserInfo(accessToken);
 
-      UserEntity kakaoUser = UserEntity.builder()
-          .email(userDTO.getEmail())
-          .userName(userDTO.getUserName())
-          .password(passwordEncoder.encode(userDTO.getPassword())).build();
+      MemberEntity kakaoUser = MemberEntity.builder()
+          .email(memberDTO.getEmail())
+          .memberName(memberDTO.getMemberName())
+          .password(passwordEncoder.encode(memberDTO.getPassword())).build();
 
-      UserEntity registeredUser = userService.create(kakaoUser);
+      MemberEntity registeredMember = memberService.create(kakaoUser);
 
-      if (null != registeredUser) {
-        final String token = tokenProvider.create(registeredUser);
-        final UserDTO responseUserDTO = UserDTO.builder()
-            .email(registeredUser.getEmail())
-            .userSeq(registeredUser.getUserSeq())
+      if (null != registeredMember) {
+        final String token = tokenProvider.create(registeredMember);
+        final MemberDTO responseMemberDTO = MemberDTO.builder()
+            .email(registeredMember.getEmail())
+            .memberId(registeredMember.getMemberId())
             .token(token)
             .build();
 
-        return ResponseEntity.ok().body(responseUserDTO);
+        return ResponseEntity.ok().body(responseMemberDTO);
       } else {
-        ResponseDTO<UserDTO> responseDTO = ResponseDTO.<UserDTO>builder().error("Login failed.").build();
+        ResponseDTO<MemberDTO> responseDTO = ResponseDTO.<MemberDTO>builder().error("Login failed.").build();
         return ResponseEntity.badRequest().body(responseDTO);
       }
     } catch (Exception e) {
       String error = e.getMessage();
-      ResponseDTO<UserDTO> responseDTO = ResponseDTO.<UserDTO>builder().error(error).build();
+      ResponseDTO<MemberDTO> responseDTO = ResponseDTO.<MemberDTO>builder().error(error).build();
       return ResponseEntity.badRequest().body(responseDTO);
     }
   }

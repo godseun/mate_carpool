@@ -11,16 +11,16 @@ import org.springframework.web.client.RestTemplate;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.mate.carpool.dto.UserDTO;
+import com.mate.carpool.dto.MemberDTO;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
 public class OAuthService {
-  public UserDTO getKakaoUserInfo(String accessToken) {
+  public MemberDTO getKakaoUserInfo(String accessToken) {
 
-    UserDTO userDTO = new UserDTO();
+    MemberDTO memberDTO = new MemberDTO();
 
     long kakaoId = 0;
     String kakaoNickName = "";
@@ -56,15 +56,15 @@ public class OAuthService {
       }
       kakaoEmail = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
 
-      userDTO.setEmail(kakaoEmail);
-      userDTO.setUserName(kakaoNickName);
-      userDTO.setPassword(Long.toString(kakaoId));
+      memberDTO.setEmail(kakaoEmail);
+      memberDTO.setMemberName(kakaoNickName);
+      memberDTO.setPassword(Long.toString(kakaoId));
     } catch (Exception e) {
       log.warn("Kakao get account Fail. {}", e.getMessage());
       throw new RuntimeException("Kakao get account Fail.");
     }
 
-    return userDTO;
+    return memberDTO;
   }
 
   public String getKakaoAccessToken(String code) {

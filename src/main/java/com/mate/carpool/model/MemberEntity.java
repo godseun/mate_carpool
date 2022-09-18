@@ -32,15 +32,15 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = "email") })
-public class UserEntity {
+public class MemberEntity {
 
   @Id
   @GeneratedValue(generator = "system-uuid")
   @GenericGenerator(name = "system-uuid", strategy = "uuid")
-  private String userSeq;
+  private String memberId;
 
   @Column
-  private String userName;
+  private String memberName;
 
   @Column
   private String email;
@@ -49,7 +49,7 @@ public class UserEntity {
   private String password;
 
   @Column
-  private String userType;
+  private String memberType;
 
   @ColumnDefault("0")
   @Column(columnDefinition = "TINYINT", length = 1)
@@ -65,8 +65,8 @@ public class UserEntity {
   private String profileImg;
 
   @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-  @JoinColumn(name = "user_seq")
-  private List<UserTimetableEntity> timeTables;
+  @JoinColumn(name = "member_id")
+  private List<MemberTimetableEntity> timeTables;
 
   @Generated(GenerationTime.INSERT)
   @Column

@@ -21,16 +21,16 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @Table
-public class UserTimetableEntity {
+public class MemberTimetableEntity {
 
   @Id
-  @Column(name = "seq")
+  @Column(name = "member_timetable_id")
   @GeneratedValue(generator = "system-uuid")
   @GenericGenerator(name = "system-uuid", strategy = "uuid")
-  private String seq;
+  private String memberTimetableId;
 
-  @Column(name = "user_seq", nullable = false)
-  private String userSeq;
+  @Column(name = "member_id", nullable = false)
+  private String memberId;
 
   @Column(columnDefinition = "CHAR", length = 1, nullable = false)
   private int dayCode;
