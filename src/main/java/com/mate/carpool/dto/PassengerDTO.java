@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
 @Data
 public class PassengerDTO {
 
-  private String ticketId;
-  private String passengerId;
+  private Long ticketId;
+  private Long passengerId;
 
   private LocalDateTime createdAt;
   @JsonIgnore

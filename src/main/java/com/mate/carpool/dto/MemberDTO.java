@@ -27,7 +27,7 @@ public class MemberDTO {
   private List<MemberTimetableDTO> timeTables;
 
   @JsonIgnore
-  private String memberId;
+  private Long memberId;
   @JsonIgnore
   private int isRemoved;
   @JsonIgnore

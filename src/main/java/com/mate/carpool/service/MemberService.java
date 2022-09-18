@@ -33,18 +33,18 @@ public class MemberService {
     return memberRepository.save(memberEntity);
   }
 
-  public Optional<MemberEntity> getMyInfo(final String memberId) {
-    return memberRepository.findById(memberId);
+  public Optional<MemberEntity> getMyInfo(final Long memberId) {
+    return memberRepository.findByMemberId(memberId);
   }
 
-  public Optional<MemberEntity> update(final String memberId, final MemberEntity memberEntity) {
+  public Optional<MemberEntity> update(final Long memberId, final MemberEntity memberEntity) {
     // TODO : 에러핸들링필요
 
     memberTimetableRepository.deleteAllByMemberId(memberId);
 
     memberTimetableRepository.saveAll(memberEntity.getTimeTables());
 
-    Optional<MemberEntity> original = memberRepository.findById(memberId);
+    Optional<MemberEntity> original = memberRepository.findByMemberId(memberId);
 
     original.get().setStudentNo(memberEntity.getStudentNo());
     original.get().setDeptNo(memberEntity.getDeptNo());

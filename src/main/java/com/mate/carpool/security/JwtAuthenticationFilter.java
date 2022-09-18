@@ -35,7 +35,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       log.info("Filter is running...");
 
       if (null != token && !token.equalsIgnoreCase("null")) {
-        String memberId = tokenProvider.validateAndGetMemberId(token);
+        Long memberId = tokenProvider.validateAndGetMemberId(token);
         log.info("Authenticated member ID : " + memberId);
 
         AbstractAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(

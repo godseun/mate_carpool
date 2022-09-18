@@ -37,7 +37,7 @@ public class MemberController {
   @Operation(summary = "자신의 정보 가져오기")
   @ResponseBody
   @GetMapping
-  public ResponseEntity<?> getMemberInfo(@AuthenticationPrincipal String memberId) {
+  public ResponseEntity<?> getMemberInfo(@AuthenticationPrincipal Long memberId) {
     // TODO: 사용자 정보가져오기 / 에러핸들링 필요
     try {
       final Optional<MemberEntity> memberEntity = memberService.getMyInfo(memberId);
@@ -65,7 +65,7 @@ public class MemberController {
   @Operation(summary = "자신의 정보 업데이트", description = "")
   @ResponseBody
   @PatchMapping
-  public ResponseEntity<?> memberTypeUpdate(@AuthenticationPrincipal String memberId,
+  public ResponseEntity<?> memberTypeUpdate(@AuthenticationPrincipal Long memberId,
       @RequestBody MemberDTO memberDTO) {
     // TODO: 사용자 정보가져오기 / 에러핸들링 필요
     try {

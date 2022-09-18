@@ -9,10 +9,10 @@ import com.mate.carpool.model.MemberTimetableEntity;
 
 public interface MemberTimetableRepository extends JpaRepository<MemberTimetableEntity, String> {
 
-  List<MemberTimetableEntity> findByMemberId(String memberId);
+  List<MemberTimetableEntity> findByMemberId(Long memberId);
 
   @Transactional
-  void deleteAllByMemberId(String memberId);
+  void deleteAllByMemberId(Long memberId);
 
   // Boolean existsByDayCode(String memberId, int dayCode);
 }

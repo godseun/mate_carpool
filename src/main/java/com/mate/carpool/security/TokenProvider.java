@@ -22,18 +22,18 @@ public class TokenProvider {
         Instant.now().plus(1, ChronoUnit.DAYS));
     return Jwts.builder()
         .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
-        .setSubject(memberEntity.getMemberId())
+        .setSubject(Long.toString(memberEntity.getMemberId()))
         .setIssuer("carpool app")
         .setIssuedAt(new Date())
         .setExpiration(expiryDate).compact();
   }
 
-  public String validateAndGetMemberId(String token) {
+  public Long validateAndGetMemberId(String token) {
     Claims claims = Jwts.parser()
         .setSigningKey(SECRET_KEY)
         .parseClaimsJws(token)
         .getBody();
 
-    return claims.getSubject();
+    return Long.parseLong(claims.getSubject());
   }
 }

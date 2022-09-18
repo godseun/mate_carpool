@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
 @Data
 public class TicketDTO {
 
-  private String ticketId;
-  private String driverId;
+  private Long ticketId;
+  private Long driverId;
   private String startPoint;
   private String endPoint;
   private LocalDateTime startTime;

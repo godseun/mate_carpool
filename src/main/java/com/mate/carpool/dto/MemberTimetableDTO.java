@@ -14,10 +14,10 @@ import lombok.NoArgsConstructor;
 public class MemberTimetableDTO {
 
   @JsonIgnore
-  private String memberId;
+  private Long memberId;
 
   private int dayCode;
 
   @JsonIgnore
-  private String memberTimetableId;
+  private Long memberTimetableId;
 }
