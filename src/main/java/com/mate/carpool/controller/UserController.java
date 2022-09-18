@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -63,7 +62,7 @@ public class UserController {
     }
   }
 
-  @Operation(summary = "드라이버 or 패신저 최초 등록", description = "")
+  @Operation(summary = "자신의 정보 업데이트", description = "")
   @ResponseBody
   @PatchMapping
   public ResponseEntity<?> userTypeCreate(@AuthenticationPrincipal String userSeq, @RequestBody UserDTO userDTO) {
