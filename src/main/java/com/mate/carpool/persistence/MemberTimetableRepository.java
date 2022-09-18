@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.mate.carpool.model.MemberTimetableEntity;
 
-public interface MemberTimetableRepository extends JpaRepository<MemberTimetableEntity, String> {
+public interface MemberTimetableRepository extends JpaRepository<MemberTimetableEntity, Long> {
 
   List<MemberTimetableEntity> findByMemberId(Long memberId);
 

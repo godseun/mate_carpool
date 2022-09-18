@@ -34,7 +34,7 @@ public class MemberService {
   }
 
   public Optional<MemberEntity> getMyInfo(final Long memberId) {
-    return memberRepository.findByMemberId(memberId);
+    return memberRepository.findById(memberId);
   }
 
   public Optional<MemberEntity> update(final Long memberId, final MemberEntity memberEntity) {
@@ -44,7 +44,7 @@ public class MemberService {
 
     memberTimetableRepository.saveAll(memberEntity.getTimeTables());
 
-    Optional<MemberEntity> original = memberRepository.findByMemberId(memberId);
+    Optional<MemberEntity> original = memberRepository.findById(memberId);
 
     original.get().setStudentNo(memberEntity.getStudentNo());
     original.get().setDeptNo(memberEntity.getDeptNo());

@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import com.mate.carpool.model.TicketEntity;
 
 @Repository
-public interface TicketRepository extends JpaRepository<TicketEntity, String> {
+public interface TicketRepository extends JpaRepository<TicketEntity, Long> {
 }
