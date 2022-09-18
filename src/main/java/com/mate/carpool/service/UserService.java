@@ -2,6 +2,7 @@ package com.mate.carpool.service;
 
 import com.mate.carpool.model.UserEntity;
 import com.mate.carpool.persistence.UserRepository;
+import com.mate.carpool.persistence.UserTimetableRepository;
 
 import java.util.Optional;
 
@@ -16,6 +17,9 @@ public class UserService {
 
   @Autowired
   private UserRepository userRepository;
+
+  @Autowired
+  private UserTimetableRepository userTimetableRepository;
 
   public UserEntity create(final UserEntity userEntity) {
     if (null == userEntity || null == userEntity.getEmail()) {
@@ -33,9 +37,14 @@ public class UserService {
     return userRepository.findById(id);
   }
 
-  public Optional<UserEntity> update(final String id, final UserEntity userEntity) {
+  public Optional<UserEntity> update(final String userSeq, final UserEntity userEntity) {
     // TODO : 에러핸들링필요
-    Optional<UserEntity> original = userRepository.findById(id);
+
+    userTimetableRepository.deleteAllByUserSeq(userSeq);
+
+    userTimetableRepository.saveAll(userEntity.getTimeTables());
+
+    Optional<UserEntity> original = userRepository.findById(userSeq);
 
     original.get().setStudentNo(userEntity.getStudentNo());
     original.get().setDeptNo(userEntity.getDeptNo());
@@ -43,17 +52,6 @@ public class UserService {
 
     userRepository.save(original.get());
 
-    return getMyInfo(id);
+    return getMyInfo(userSeq);
   }
-
-  // public UserEntity getByCredentials(final String email, final String password,
-  // final PasswordEncoder encoder) {
-  // final UserEntity originalUser = userRepository.findByEmail(email);
-
-  // if (null != originalUser && encoder.matches(password,
-  // originalUser.getPassword())) {
-  // return originalUser;
-  // }
-  // return null;
-  // }
 }

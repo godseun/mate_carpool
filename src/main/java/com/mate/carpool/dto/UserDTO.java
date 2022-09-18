@@ -37,4 +37,11 @@ public class UserDTO {
   @JsonIgnore
   private LocalDateTime updatedAt;
 
+  public boolean isUserTypeValid() {
+    if (this.userType == null || !this.userType.equals("D") && !this.userType.equals("P")) {
+      return false;
+    }
+    return true;
+  }
+
 }

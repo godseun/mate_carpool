@@ -1,11 +1,16 @@
 package com.mate.carpool.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -32,7 +37,7 @@ public class UserEntity {
   @Id
   @GeneratedValue(generator = "system-uuid")
   @GenericGenerator(name = "system-uuid", strategy = "uuid")
-  private String seq;
+  private String userSeq;
 
   @Column
   private String userName;
@@ -58,6 +63,10 @@ public class UserEntity {
 
   @Column
   private String profileImg;
+
+  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @JoinColumn(name = "user_seq")
+  private List<UserTimetableEntity> timeTables;
 
   @Generated(GenerationTime.INSERT)
   @Column
