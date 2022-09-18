@@ -1,4 +1,4 @@
-# MATE 6.0 Car Pool project
+# MATE 6.1 Car Pool project
 
 <br><br>
 
